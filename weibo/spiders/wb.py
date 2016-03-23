@@ -6,8 +6,17 @@ class WeiboSpider(scrapy.Spider):
     name = 'weibo'
 
     def start_requests(self):
-        cookies = {'M_WEIBOCN_PARAMS': 'from=home&luicode=20000174', 'SUB': '_2A2577k3eDeRxGeRK4lES9S7PyTuIHXVZEVOWrDV6PUJbrdANLUzDkW1LHesFvPNBrnupLGYvCjmQgtObRLy65A..', 'SUHB': '09P89Q5jirKsV1', '_T_WM': '40c5a1b42ccafae3f8cee147a4f1351d', 'gsid_CTandWM': '4ulUbd311DUmGGa4QTj3GasDk5h'}
-        return [scrapy.Request('http://weibo.cn/?since_id=DmF9bhji0&max_id=DmEWM7xoj&page=1', cookies = cookies, callback = self.after_login)]
+        cookies = {'_T_WM': '40c5a1b42ccafae3f8cee147a4f1351d', 
+                'SUHB': '0ftoM79MqQ_Iof', 
+                'H5_INDEX': '0_all', 
+                'H5_INDEX_TITLE':u'No7小强', 
+                'SUB': '_2A2579Y0UDeRxGeRK4lES9S7PyTuIHXVZGRNcrDV6PUJbrdBeLRTjkW1LHes1rjZm75tojmUOF5u-Znm33zBMoQ..',
+                'SSOLoginState': '1458699588', 
+                'M_WEIBOCN_PARAMS': 'uicode=20000174', 
+                'gsid_CTandWM': '4uymCpOz5J13JhgPYKnu8asDk5h'}
+        for i in range(1, 190):
+            res = scrapy.Request('http://weibo.cn/?since_id=0&max_id=DmHmv2T3c&page=%d' % i, cookies = cookies, callback = self.after_login)
+            yield res
 
     def after_login(self, response):
         alls = response.xpath('//div[starts-with(@id, "M_")]')
@@ -21,7 +30,5 @@ class WeiboSpider(scrapy.Spider):
             item['content'] = cont.xpath('string(.)').extract()
             item['time'] =each.xpath('div/span[@class="ct"]/text()').extract()[0]
             print item['author']
-            print item['content']
-            print item['time']
-        yield item
+            yield item
 
