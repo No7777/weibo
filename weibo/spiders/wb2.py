@@ -7,27 +7,30 @@ class WeiboSpider(scrapy.Spider):
     name = 'weibo2'
 
     def start_requests(self):
-        cookies = {'_T_WM': '40c5a1b42ccafae3f8cee147a4f1351d', 
-                'SUHB': '0ftoM79MqQ_Iof', 
+        cookies = {
+                'SSOLoginState': '1459927749',
+                '_T_WM': '40c5a1b42ccafae3f8cee147a4f1351d',
+                'SUHB': '08JKhOK2Y_ifT-', 
+                'SUB':'_2A256AMqUDeRxGeRN71EQ9yrJyz-IHXVZCtbcrDV6PUJbrdBeLRHkkW1LHetutsd5wfvsSsscD3DRUQiI3A3XNA..',
+                'M_WEIBOCN_PARAMS': 'uicode=20000174',
                 'H5_INDEX': '0_all', 
-                'H5_INDEX_TITLE':u'No7小强', 
-                'SUB': '_2A2579Y0UDeRxGeRK4lES9S7PyTuIHXVZGRNcrDV6PUJbrdBeLRTjkW1LHes1rjZm75tojmUOF5u-Znm33zBMoQ..',
-                'SSOLoginState': '1458699588', 
-                'M_WEIBOCN_PARAMS': 'uicode=20000174', 
-                'gsid_CTandWM': '4uymCpOz5J13JhgPYKnu8asDk5h'}
+                'H5_INDEX_TITLE':u'No7小强',  
+                'gsid_CTandWM': '4uW6CpOz5C4E7zdTF9nJ19Pz887'}
 
         res = scrapy.Request('http://m.weibo.cn/', cookies = cookies, callback = self.after_login)
         yield res
 
     def after_login(self, response):
-        for i in range(186):
-            yield scrapy.Request('http://m.weibo.cn/index/feed?format=cards&next_cursor=3956134912238794&page=%d' % (i+1), self.home)
+        for i in range(1):
+            con = scrapy.Request('http://m.weibo.cn/page/pageJson?containerid=&containerid=102803&v_p=11&ext=&fid=102803&uicode=10000011&&page=%d' % (i+1), self.home)
+            yield con
 
     def home(Self, response):
         item = WeiboItem()
         objs = json.loads(response.body)
-        obj = objs[0]
-        for o in obj['card_group']:
-            item['content'] = o['mblog']['text']
-            item['author'] = o['mblog']['user']['screen_name']
-            yield item
+        print objs
+        #obj = objs[0]
+        #for o in obj['card_group']:
+            #item['content'] = o['mblog']['text']
+            #item['author'] = o['mblog']['user']['screen_name']
+            #yield item

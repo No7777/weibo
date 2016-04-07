@@ -6,16 +6,16 @@ class WeiboSpider(scrapy.Spider):
     name = 'weibo'
 
     def start_requests(self):
-        cookies = {'_T_WM': '40c5a1b42ccafae3f8cee147a4f1351d', 
-                'SUHB': '0ftoM79MqQ_Iof', 
-                'H5_INDEX': '0_all', 
-                'H5_INDEX_TITLE':u'No7小强', 
-                'SUB': '_2A2579Y0UDeRxGeRK4lES9S7PyTuIHXVZGRNcrDV6PUJbrdBeLRTjkW1LHes1rjZm75tojmUOF5u-Znm33zBMoQ..',
-                'SSOLoginState': '1458699588', 
-                'M_WEIBOCN_PARAMS': 'uicode=20000174', 
-                'gsid_CTandWM': '4uymCpOz5J13JhgPYKnu8asDk5h'}
-        for i in range(1, 190):
-            res = scrapy.Request('http://weibo.cn/?since_id=0&max_id=DmHmv2T3c&page=%d' % i, cookies = cookies, callback = self.after_login)
+        cookies = {'H5_INDEX': '0_all',
+                'H5_INDEX_TITLE': u'No7小强',
+                '_T_WM': '40c5a1b42ccafae3f8cee147a4f1351d',
+                'SUHB': '0WGdI9a3ifKtsU', 
+                'SUB':'_2A256AAQIDeRxGeRK4lES9S7PyTuIHXVZCqxArDV6PUJbrdBeLXDukW1LHes0Lk9Lh1I64koiNLtkt2ZRcKT3lw..',
+                'M_WEIBOCN_PARAMS': 'uicode=20000061&featurecode=20000180&fid=3961273848699162&oid=3961273848699162', 
+                'gsid_CTandWM': '4ujoCpOz5tuu5PIvhDEddasDk5h'}
+        for i in range(1, 10):
+            res = scrapy.Request('http://weibo.com/' , cookies = cookies, callback = self.after_login)
+            print res.body
             yield res
 
     def after_login(self, response):
